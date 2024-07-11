@@ -1,11 +1,14 @@
 services:
   # etcd
   etcd:
-    image: 'bitnami/etcd:3.5.9'
+    image: 'bitnami/etcd:latest'
     container_name: etcd
     restart: on-failure
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
+    # etcd数据持久化
+    volumes:
+      - etcd-data:/bitnami/etcd
     ports:
       #      所以你要用 12379 端口来连接 etcd
       - 2379:2379
@@ -29,3 +32,11 @@ services:
       - go-cron-server:go-cron-server
     ports:
      - 80:80
+
+volumes:
+  etcd-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /path/to/your/host/directory
+      o: bind
